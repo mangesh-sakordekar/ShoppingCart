@@ -43,18 +43,15 @@ export default function ProductListScreen() {
     const flyRef = useRef(null);
     const navigation = useNavigation();
 
+    //Gets the starting coordinates and adds flying animation for the image
     const handleAddToCart = (item, imageRef) => {
       if (!imageRef.current) return;
-      //console.log(item.name);
       UIManager.measure(
         findNodeHandle(imageRef.current),
         (_x, _y, _w, _h, pageX, pageY) => {
-          console.log(item.name);
           flyRef.current?.fly(pageX, pageY, item.image);
         }
       );
-  
-      // add to cart logic here
     };
 
     return (
@@ -67,7 +64,10 @@ export default function ProductListScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 10 }}
         />
+
+        {/**FlyToCart objectto support animations */}
         <FlyToCart ref={flyRef} />
+
         {/**Display a button at the bottom right corner to navigate to the cart tab*/}
         <TouchableOpacity
             style={styles.fab}

@@ -30,12 +30,13 @@ export default function ProductItem({ product, onAddToCart }) {
   //Button handler to add an item to the cart
   const addToCart = () => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
-    onAddToCart(imageRef)
+    onAddToCart(imageRef);
   };
 
   //Button handler to increase quantity of the item in the cart
   const increaseQuantity = () => {
     dispatch({ type: 'INCREASE_QUANTITY', payload: product });
+    onAddToCart(imageRef);
   };
 
   //Button handler to decrease quantity of the item in the cart
