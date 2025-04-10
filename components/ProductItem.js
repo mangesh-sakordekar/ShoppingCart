@@ -15,13 +15,14 @@
  *
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useCart } from '../context/CartContext';
 
-export default function ProductItem({ product }) {
+export default function ProductItem({ product, onAddToCart }) {
   const { cart, dispatch } = useCart();
 
+  const imageRef = useRef(null);
   //Check if the item is in the cart and get it quantity
   const cartItem = cart.find((item) => item.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;
@@ -29,6 +30,7 @@ export default function ProductItem({ product }) {
   //Button handler to add an item to the cart
   const addToCart = () => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
+    onAddToCart(imageRef)
   };
 
   //Button handler to increase quantity of the item in the cart
@@ -48,7 +50,7 @@ export default function ProductItem({ product }) {
   return (
     <View style={styles.card}>
         {/**Display the thumbnail of the product */}
-        <Image source={{ uri: product.image }} style={styles.image} />
+        <Image ref={imageRef} source={{ uri: product.image }} style={styles.image} />
 
         {/**Display the details of the item */}
         <View style={styles.details}>

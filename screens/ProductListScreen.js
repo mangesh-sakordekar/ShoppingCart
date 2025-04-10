@@ -10,10 +10,11 @@
  *
  */
 
-import React from 'react';
-import { View, FlatList, StyleSheet, Button, TouchableOpacity, Text} from 'react-native';
+import React, { useRef } from 'react';
+import { View, FlatList, StyleSheet, Button, TouchableOpacity, Text, UIManager, findNodeHandle } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ProductItem from '../components/ProductItem';
+import FlyToCart from '../components/FlyToCartAnimation';
 
 //Mock data for the app
 const PRODUCTS = [
@@ -39,18 +40,34 @@ const PRODUCTS = [
 
 
 export default function ProductListScreen() {
+    const flyRef = useRef(null);
     const navigation = useNavigation();
+
+    const handleAddToCart = (item, imageRef) => {
+      if (!imageRef.current) return;
+      //console.log(item.name);
+      UIManager.measure(
+        findNodeHandle(imageRef.current),
+        (_x, _y, _w, _h, pageX, pageY) => {
+          console.log(item.name);
+          flyRef.current?.fly(pageX, pageY, item.image);
+        }
+      );
+  
+      // add to cart logic here
+    };
+
     return (
       <View style={styles.container}>
 
         {/**Display a list of items in the data as ProductItem Cards */}
         <FlatList
           data={PRODUCTS}
-          renderItem={({ item }) => <ProductItem product={item} />}
+          renderItem={({ item }) => <ProductItem product={item} onAddToCart={(imageRef) => handleAddToCart(item, imageRef)}/>}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 10 }}
         />
-
+        <FlyToCart ref={flyRef} />
         {/**Display a button at the bottom right corner to navigate to the cart tab*/}
         <TouchableOpacity
             style={styles.fab}

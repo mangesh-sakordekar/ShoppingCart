@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     container:{
         flex: 1, 
         padding: 10,
+        paddingBottom: 120,
     },
     navButtons: {
         flexDirection: 'row',
