@@ -1,3 +1,20 @@
+/**
+ * ProductItem.js
+ *
+ * This component displays an individual product item within the product list.
+ * 
+ * Features:
+ * - Displays product thumbnail, name, and price
+ * - Shows an "Add to Cart" button if the product is not in the cart
+ * - Shows circular '+' and '−' buttons along with quantity if the product is already in the cart
+ * 
+ * The component interacts with the global CartContext to:
+ * - Add items to the cart
+ * - Increase or decrease item quantity
+ * - Remove item from the cart when quantity is reduced to zero
+ *
+ */
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useCart } from '../context/CartContext';
@@ -5,17 +22,21 @@ import { useCart } from '../context/CartContext';
 export default function ProductItem({ product }) {
   const { cart, dispatch } = useCart();
 
+  //Check if the item is in the cart and get it quantity
   const cartItem = cart.find((item) => item.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
+  //Button handler to add an item to the cart
   const addToCart = () => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
   };
 
+  //Button handler to increase quantity of the item in the cart
   const increaseQuantity = () => {
     dispatch({ type: 'INCREASE_QUANTITY', payload: product });
   };
 
+  //Button handler to decrease quantity of the item in the cart
   const decreaseQuantity = () => {
     if (quantity > 1) {
       dispatch({ type: 'DECREASE_QUANTITY', payload: product });
@@ -26,31 +47,37 @@ export default function ProductItem({ product }) {
 
   return (
     <View style={styles.card}>
-      <Image source={{ uri: product.image }} style={styles.image} />
-      <View style={styles.details}>
-        <Text style={styles.name}>{product.name}</Text>
-        <Text style={styles.price}>${product.price}</Text>
-      </View>
+        {/**Display the thumbnail of the product */}
+        <Image source={{ uri: product.image }} style={styles.image} />
 
-      {quantity > 0 ? (
-        <View style={styles.quantityControls}>
-          <TouchableOpacity onPress={decreaseQuantity} style={styles.controlButton}>
-            <Text style={styles.controlButtonText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.quantityText}>{quantity}</Text>
-          <TouchableOpacity onPress={increaseQuantity} style={styles.controlButton}>
-            <Text style={styles.controlButtonText}>+</Text>
-          </TouchableOpacity>
+        {/**Display the details of the item */}
+        <View style={styles.details}>
+            <Text style={styles.name}>{product.name}</Text>
+            <Text style={styles.price}>${product.price}</Text>
         </View>
-      ) : (
-        <TouchableOpacity onPress={addToCart} style={styles.button}>
-          <Text style={styles.buttonText}>Add to Cart</Text>
-        </TouchableOpacity>
-      )}
+
+        {/**if the current quantity of the item is zero show the 'add to cart' button, else */}
+        {/**Display the current quantity of the item and buttons to increase and decrease quantity */}
+        {quantity > 0 ? (
+            <View style={styles.quantityControls}>
+                <TouchableOpacity onPress={decreaseQuantity} style={styles.controlButton}>
+                    <Text style={styles.controlButtonText}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.quantityText}>{quantity}</Text>
+                <TouchableOpacity onPress={increaseQuantity} style={styles.controlButton}>
+                    <Text style={styles.controlButtonText}>+</Text>
+                </TouchableOpacity>
+            </View>
+        ) : (
+            <TouchableOpacity onPress={addToCart} style={styles.button}>
+                <Text style={styles.buttonText}>Add to Cart</Text>
+            </TouchableOpacity>
+        )}
     </View>
   );
 }
 
+{/*Styling rules*/ }
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
@@ -98,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f1f1',
     width: 40,
     height: 40,
-    borderRadius: 20,  // Makes the button circular
+    borderRadius: 20, 
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,

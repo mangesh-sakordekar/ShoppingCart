@@ -1,8 +1,21 @@
+/**
+ * ProductListScreen.js
+ *
+ * This component displays a list of products available for purchase.
+ *
+ * Features:
+ * - Renders mock product data using the ProductItem component
+ * - Allows users to add items to the cart or update quantities directly from the list
+ * - Includes a floating action button (FAB) in the bottom-right corner that navigates to the Cart screen
+ *
+ */
+
 import React from 'react';
 import { View, FlatList, StyleSheet, Button, TouchableOpacity, Text} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ProductItem from '../components/ProductItem';
 
+//Mock data for the app
 const PRODUCTS = [
     {
       id: '1',
@@ -22,19 +35,23 @@ const PRODUCTS = [
       price: 299,
       image: 'https://di2ponv0v5otw.cloudfront.net/posts/2024/04/11/6617c50bfe7e2cc1357b3ccd/m_6617c50bfe7e2cc1357b3cce.jpg',
     },
-  ];
+];
 
 
 export default function ProductListScreen() {
     const navigation = useNavigation();
     return (
       <View style={styles.container}>
+
+        {/**Display a list of items in the data as ProductItem Cards */}
         <FlatList
           data={PRODUCTS}
           renderItem={({ item }) => <ProductItem product={item} />}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 10 }}
         />
+
+        {/**Display a button at the bottom right corner to navigate to the cart tab*/}
         <TouchableOpacity
             style={styles.fab}
             onPress={() => navigation.navigate('Cart')}
@@ -45,6 +62,7 @@ export default function ProductListScreen() {
     );
 }
   
+{/**Styling Rules */}
 const styles = StyleSheet.create({
     container: {
         flex: 1,
